@@ -27,12 +27,6 @@
 
 如果要更新所有新访问者默认看到的文献，请修改仓库中的 `data.js` 并重新部署。已有本地记录的浏览器会优先使用本地数据，需要自行导入更新或处理本地记录。
 
-## 编辑保护的范围
-
-编辑密钥验证运行在浏览器端，用于防止误操作，不能替代服务器端身份认证或权限控制，也不能防止技术人员绕过前端验证。
-
-本项目没有共享数据库。访问者在页面中的编辑不会修改其他人的记录，也不会修改仓库里的文件。仓库文件的写入权限由 GitHub 管理。
-
 ## 文件结构
 
 | 文件 | 用途 |
@@ -43,34 +37,6 @@
 | `data.js` | 初始论文元数据 |
 | `.nojekyll` | 让 GitHub Pages 直接提供静态文件 |
 | `README.md` | 项目说明 |
-
-## 本地预览
-
-在项目根目录运行：
-
-```bash
-python -m http.server 8000
-```
-
-然后打开 <http://localhost:8000>。密钥验证需要 HTTPS 或 localhost，请使用本地服务器预览。
-
-## 部署到 GitHub Pages
-
-这是纯静态网站，无需安装依赖或执行构建命令。
-
-**启用 Pages 前，请确认允许网站公开访问。普通 GitHub Pages 的网站通常公开可访问，即使源代码仓库是私有的；原私密托管站点的登录权限不会随静态文件迁移。**
-
-1. 将项目文件上传到仓库根目录，确保 `index.html` 直接位于根目录，不要只上传 ZIP 或额外嵌套文件夹。
-2. 在仓库中打开 **Settings → Pages**。
-3. 在 **Build and deployment** 中选择：
-   - **Source**：Deploy from a branch
-   - **Branch**：main
-   - **Folder**：/(root)
-4. 点击 **Save**，等待 Pages 部署完成。
-5. 使用 Pages 设置页面给出的网址访问；此仓库的默认项目地址为 `https://saber0222.github.io/ReadPaper/`，是否可访问以部署结果为准。
-6. 如需迁移个人记录，在旧网站导出 JSON，再在新网站导入。
-
-GitHub Free 支持公开仓库的 Pages；私有仓库需支持该功能的付费方案。具体条件参考 [GitHub Pages 官方部署说明](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)。
 
 ## 论文与指标说明
 
