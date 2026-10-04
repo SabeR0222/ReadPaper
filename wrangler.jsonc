@@ -1,0 +1,16 @@
+{
+  "name": "readpaper-api",
+  "main": "backend/worker.mjs",
+  "compatibility_date": "2026-10-04",
+  "vars": {
+    "GITHUB_REPO": "SabeR0222/ReadPaper",
+    "GITHUB_BRANCH": "main",
+    "ALLOWED_ORIGINS": "https://saber0222.github.io",
+    "READ_PUBLIC": "true"
+  },
+  "ratelimits": [{
+    "name": "AUTH_LIMITER",
+    "namespace_id": "2026100401",
+    "simple": { "limit": 10, "period": 60 }
+  }]
+}
