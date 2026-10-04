@@ -99,7 +99,7 @@ async function github(env, config, init) {
   try { response = await fetch(endpoint + (init?.method === 'PUT' ? '' : `?ref=${encodeURIComponent(config.branch)}`), {
     ...init, headers:{ Authorization:`Bearer ${env.GITHUB_TOKEN}`, Accept:'application/vnd.github+json',
       'X-GitHub-Api-Version':'2022-11-28', 'User-Agent':'ReadPaper-Editor', 'Content-Type':'application/json' },
-    signal:AbortSignal.timeout(15000), redirect:'error'
+    signal:AbortSignal.timeout(15000), redirect:'manual'
   }); } catch (error) {
     // Emit only fixed diagnostic codes: never log credentials or raw exceptions.
     const detail = String(error?.message || '');
@@ -109,6 +109,7 @@ async function github(env, config, init) {
     console.error('ReadPaper GitHub request failed:', code);
     fail(502, `连接 GitHub 失败（${code}）；请维护者检查后端日志。`);
   }
+  if (response.status >= 300 && response.status < 400) fail(502, 'GitHub 返回重定向；请检查仓库名称是否变更。');
   if (response.status === 409 || response.status === 422) fail(409, '仓库已发生变化，请刷新并核对记录后重试。');
   if (!response.ok) fail(502, `GitHub 返回 ${response.status}；请维护者检查令牌权限、有效期和仓库分支。`);
   return response.json();
