@@ -100,7 +100,15 @@ async function github(env, config, init) {
     ...init, headers:{ Authorization:`Bearer ${env.GITHUB_TOKEN}`, Accept:'application/vnd.github+json',
       'X-GitHub-Api-Version':'2022-11-28', 'User-Agent':'ReadPaper-Editor', 'Content-Type':'application/json' },
     signal:AbortSignal.timeout(15000), redirect:'error'
-  }); } catch { fail(502, '连接 GitHub 失败，请稍后重试。'); }
+  }); } catch (error) {
+    // Emit only fixed diagnostic codes: never log credentials or raw exceptions.
+    const detail = String(error?.message || '');
+    const code = /AbortSignal|\.timeout.*function/i.test(detail) ? 'RUNTIME_TIMEOUT_UNSUPPORTED'
+      : /header|ByteString|character/i.test(detail) ? 'INVALID_AUTH_HEADER'
+      : /timeout|abort/i.test(detail) ? 'GITHUB_TIMEOUT' : 'GITHUB_NETWORK_ERROR';
+    console.error('ReadPaper GitHub request failed:', code);
+    fail(502, `连接 GitHub 失败（${code}）；请维护者检查后端日志。`);
+  }
   if (response.status === 409 || response.status === 422) fail(409, '仓库已发生变化，请刷新并核对记录后重试。');
   if (!response.ok) fail(502, `GitHub 返回 ${response.status}；请维护者检查令牌权限、有效期和仓库分支。`);
   return response.json();
